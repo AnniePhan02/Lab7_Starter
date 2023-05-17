@@ -80,9 +80,9 @@ async function getRecipes() {
   // EXPOSE - START (All expose numbers start with A)
   // A1. TODO - Check local storage to see if there are any recipes.
   //            If there are recipes, return them.
-  const recipes = localStorage.getItem('recipes');
-  if (recipes) {
-    return JSON.parse(recipes);
+  const recipesFromLocalStorage = localStorage.getItem('recipes');
+  if (recipesFromLocalStorage) {
+    return JSON.parse(recipesFromLocalStorage);
   }
   /**************************/
   // The rest of this method will be concerned with requesting the recipes
@@ -101,7 +101,7 @@ async function getRecipes() {
     /**************************/
     // A4. TODO - Loop through each recipe in the RECIPE_URLS array constant
     //            declared above
-    for (const recipe of RECIPE_URLS){
+    for (let i = 0; i < RECIPE_URLS.length; i++){
         // A5. TODO - Since we are going to be dealing with asynchronous code, create
         //            a try / catch block. A6-A9 will be in the try portion, A10-A11
         //            will be in the catch portion.
@@ -110,10 +110,12 @@ async function getRecipes() {
         //            article on fetch(). NOTE: Fetches are ASYNCHRONOUS, meaning that
         //            you must either use "await fetch(...)" or "fetch.then(...)". This
         //            function is using the async keyword so we recommend "await"
-        const fetchRespose = await fetch(recipe);
-        const recipe = await fetchRespose.json();
+        let recipeURL = RECIPE_URLS[i];
 
-        recipeStorage.push(recipe);
+        const fetchRespose = await fetch(recipeURL);
+        const json = await fetchRespose.json();
+
+        recipeStorage.push(json);
 
         if (recipeStorage.length == RECIPE_URLS.length) {
           saveRecipesToStorage(recipeStorage);
